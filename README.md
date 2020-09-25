@@ -36,10 +36,6 @@ npm run serverstart
 
 - Github: [@disco-trooper](https://github.com/disco-trooper)
 
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
 ## 📝 License
 
 Copyright © 2020 [Denis Kobliha](https://github.com/disco-trooper).<br />
