@@ -253,28 +253,13 @@ exports.game_update_post = [
 
     let image;
     let game;
+
+    // If user selected cover
     if (req.file) {
       image = new Image({
         filename: req.file.filename,
         content_type: req.file.mimetype,
       });
-      try {
-        let old_game = await Game.findById(req.params.id).populate('image');
-        if (old_game.image) {
-          await Image.findByIdAndRemove(old_game.image._id);
-          await fs.unlink(
-            path.resolve(
-              __dirname,
-              '../public/images/' + old_game.image.filename
-            ),
-            function(err) {
-              if (err) throw new Error(err);
-            }
-          );
-        }
-      } catch (err) {
-        next(err);
-      }
       game = new Game({
         title: req.body.title,
         genre: req.body.genre,
@@ -284,10 +269,33 @@ exports.game_update_post = [
         image: image._id,
         _id: req.params.id, //This is required, or a new ID will be assigned!
       });
+      try {
+        // Check if password matches
+        if (req.body.password == process.env.PASSWORD) {
+          let old_game = await Game.findById(req.params.id).populate('image');
+          if (old_game.image) {
+            await Image.findByIdAndRemove(old_game.image._id);
+            await fs.unlink(
+              path.resolve(
+                __dirname,
+                '../public/images/' + old_game.image.filename
+              ),
+              function(err) {
+                if (err) throw new Error(err);
+              }
+            );
+          }
+        }
+      } catch (err) {
+        next(err);
+      }
+      // If user didn't select cover
     } else {
       try {
         let previous_image = await Game.findById(req.params.id);
+        // If updated game has a cover
         if (previous_image.image) {
+          // If user selected to remove the cover
           if (req.body.removeImage == 'yes') {
             if (req.body.password == process.env.PASSWORD) {
               let old_game = await Game.findById(req.params.id);
@@ -311,6 +319,14 @@ exports.game_update_post = [
                 image: null,
               });
             } else {
+              game = new Game({
+                title: req.body.title,
+                genre: req.body.genre,
+                description: req.body.description,
+                stock: req.body.stock,
+                price: req.body.price,
+                _id: req.params.id, //This is required, or a new ID will be assigned!
+              });
               res.render('game_form', {
                 title: 'Update Game',
                 genres,
@@ -319,6 +335,7 @@ exports.game_update_post = [
                 no_match: true,
               });
             }
+            // If game has a cover and user wants to keep it
           } else {
             game = new Game({
               title: req.body.title,
@@ -330,6 +347,7 @@ exports.game_update_post = [
               image: previous_image.image,
             });
           }
+          // If updated game doesn't have cover
         } else {
           game = new Game({
             title: req.body.title,
@@ -380,6 +398,56 @@ exports.game_update_post = [
         }
       }
     } else {
+      if (req.file) {
+        await fs.unlink(
+          path.resolve(__dirname, '../public/images/' + req.file.filename),
+          function(err) {
+            if (err) throw new Error(err);
+          }
+        );
+      }
+      fs.readdir(path.resolve(__dirname, '../public/images/'), function(
+        err,
+        files
+      ) {
+        //handling error
+        if (err) {
+          return console.log('Unable to scan directory: ' + err);
+        }
+        //listing all files using forEach
+        files.forEach(async function(file) {
+          // Do whatever you want to do with the file
+          if (file == 'no-image.jpg') return;
+          try {
+            let image = await Image.find({ filename: file });
+            if (!image.filename) {
+              console.log('No img in db, delete');
+              console.log(image.filename);
+              return;
+            }
+            if (image.filename) {
+              console.log('GOT IT');
+              console.log(image.filename);
+              return;
+            } else {
+              console.log('WHYYY');
+              return;
+            }
+          } catch (err) {
+            next(err);
+          }
+        });
+      });
+      let previous_image = await Game.findById(req.params.id);
+      game = new Game({
+        title: req.body.title,
+        genre: req.body.genre,
+        description: req.body.description,
+        stock: req.body.stock,
+        price: req.body.price,
+        _id: req.params.id, //This is required, or a new ID will be assigned!
+        image: previous_image.image ? previous_image.image : null,
+      });
       res.render('game_form', {
         title: 'Update Game',
         genres,
