@@ -1,20 +1,20 @@
-let createError = require('http-errors');
-let express = require('express');
-let path = require('path');
-let cookieParser = require('cookie-parser');
-let logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-let indexRouter = require('./routes/index');
-let catalogRouter = require('./routes/catalog');
+const indexRouter = require('./routes/index');
+const catalogRouter = require('./routes/catalog');
 
-let app = express();
+const app = express();
 require('dotenv').config();
 
 //Set up mongoose connection
-let mongoose = require('mongoose');
-let mongoDB = process.env.DB;
+const mongoose = require('mongoose');
+const mongoDB = process.env.DB;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-let db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // view engine setup
