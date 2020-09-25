@@ -289,26 +289,36 @@ exports.game_update_post = [
         let previous_image = await Game.findById(req.params.id);
         if (previous_image.image) {
           if (req.body.removeImage == 'yes') {
-            let old_game = await Game.findById(req.params.id);
-            let image = await Image.findById(old_game.image);
-            if (old_game.image) {
-              await Image.findByIdAndRemove(old_game.image);
-              await fs.unlink(
-                path.resolve(__dirname, '../public/images/' + image.filename),
-                function(err) {
-                  if (err) throw new Error(err);
-                }
-              );
+            if (req.body.password == process.env.PASSWORD) {
+              let old_game = await Game.findById(req.params.id);
+              let image = await Image.findById(old_game.image);
+              if (old_game.image) {
+                await Image.findByIdAndRemove(old_game.image);
+                await fs.unlink(
+                  path.resolve(__dirname, '../public/images/' + image.filename),
+                  function(err) {
+                    if (err) throw new Error(err);
+                  }
+                );
+              }
+              game = new Game({
+                title: req.body.title,
+                genre: req.body.genre,
+                description: req.body.description,
+                stock: req.body.stock,
+                price: req.body.price,
+                _id: req.params.id, //This is required, or a new ID will be assigned!
+                image: null,
+              });
+            } else {
+              res.render('game_form', {
+                title: 'Update Game',
+                genres,
+                game,
+                password: true,
+                no_match: true,
+              });
             }
-            game = new Game({
-              title: req.body.title,
-              genre: req.body.genre,
-              description: req.body.description,
-              stock: req.body.stock,
-              price: req.body.price,
-              _id: req.params.id, //This is required, or a new ID will be assigned!
-              image: null,
-            });
           } else {
             game = new Game({
               title: req.body.title,
