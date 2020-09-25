@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h2.mt-3.mb-3 #{title}: #{game.title}
+  p Do you really want to delete this game?
+  
+  form(method='POST' action='')
+    div.form-group
+      input#gameid.form-control(type='hidden',name='gameid', required='true', value=game._id )
+      label(for='password') #[Strong Password:]
+      input#password.form-control.mx-auto.mb-3(type='password', name='password' required="true")
+
+    button.btn.btn-primary(type='submit') Delete
+  if no_match
+    div(class="mt-2 alert alert-danger mx-auto" role="alert") Password doesn't match
+  

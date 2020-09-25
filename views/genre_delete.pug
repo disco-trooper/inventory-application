@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1 #{title}: #{genre.name}
+
+  if genre_games.length
+  
+    p #[strong Delete the following games before attempting to delete this genre.]
+  
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4.mb-3 Games:
+  
+      each game in genre_games
+        p.mb-2 
+          a(href=game.url) #{game.title}
+  else
+    p Do you really want to delete this genre?
+    
+    form(method='POST' action='')
+      div.form-group
+        input#genreid.form-control(type='hidden',name='genreid', required='true', value=genre._id )
+        label(for='password') #[Strong Password:]
+        input#password.form-control.mx-auto.mb-3(type='password', name='password' required="true")
+
+      button.btn.btn-primary(type='submit') Delete
+    if no_match
+      div(class="alert mt-2 alert-danger mx-auto" role="alert") Password doesn't match

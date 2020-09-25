@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1.mt-3.mb-3= title
+  p Following genres are in the inventory:
+    each genre in genres
+      p
+        a(href=genre.url) #[strong #{genre.name}]

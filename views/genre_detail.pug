@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1.mt-3.mb-3= title
+  p.text-left #{genre.description}
+  div.mb-3
+    a.mr-2.btn.btn-primary(href=genre.url+"/update") Update Genre
+    a.btn.btn-danger(href=genre.url+"/delete") Delete Genre
+  h5.mb-2 Games:
+  .d-flex.flex-wrap.justify-content-center.mx-auto#genre-detail-div
+    each game in genre_games
+      div(class="card mx-auto mb-4" style="width: 15rem;")
+        if game.image
+          a.mt-2(href=game.url)
+            img(class="card-img-top" src=game.image.url alt="Card image cap")
+        else
+          a.mt-2(href=game.url)
+            img(class="card-img-top" src="/images/no-image.jpg" alt="Card image cap")
+        div(class="card-body")
+          h5(class="card-title") #{game.title}
+          p(class="card-text") #[strong Price:] #{game.formatted_price}
+          p(class="card-text") #[strong Stock:] #{game.stock}
+          a(href=game.url class="btn btn-primary") Details

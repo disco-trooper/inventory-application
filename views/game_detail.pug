@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1.mt-3.mt-3= title
+  div(class="card mx-auto mb-4" style="")
+    if game.image
+      img.mt-2(class="card-img-top mx-auto" src=game.image.url alt="Card image cap")
+    else
+      img.mt-2(class="card-img-top mx-auto" src="/images/no-image.jpg" alt="Card image cap")
+    div(class="card-body")
+      h5(class="card-title") #{game.title}
+      p(class="card-text") #{game.description}
+      p(class="card-text") #[strong Genre:] #{game.genre.name}
+      p(class="card-text") #[strong Price:] #{game.formatted_price}
+      p(class="card-text") #[strong Stock:] #{game.stock}
+      a.btn.btn-primary.mr-2(href=game.url+"/update") Update Game
+      a.btn.btn-danger(href=game.url+"/delete") Delete Game
+
+  
