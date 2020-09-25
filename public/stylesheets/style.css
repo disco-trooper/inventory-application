@@ -22,3 +22,9 @@ select,
   max-height: 15rem;
   object-fit: contain;
 }
+
+.btn.focus,
+.btn:focus {
+  outline: 0;
+  box-shadow: none;
+}
