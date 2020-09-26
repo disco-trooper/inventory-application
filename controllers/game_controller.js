@@ -397,6 +397,7 @@ exports.game_update_post = [
           next(err);
         }
       }
+      // Password doesn't match
     } else {
       if (req.file) {
         await fs.unlink(
@@ -406,38 +407,6 @@ exports.game_update_post = [
           }
         );
       }
-      fs.readdir(path.resolve(__dirname, '../public/images/'), function(
-        err,
-        files
-      ) {
-        //handling error
-        if (err) {
-          return console.log('Unable to scan directory: ' + err);
-        }
-        //listing all files using forEach
-        files.forEach(async function(file) {
-          // Do whatever you want to do with the file
-          if (file == 'no-image.jpg') return;
-          try {
-            let image = await Image.find({ filename: file });
-            if (!image.filename) {
-              console.log('No img in db, delete');
-              console.log(image.filename);
-              return;
-            }
-            if (image.filename) {
-              console.log('GOT IT');
-              console.log(image.filename);
-              return;
-            } else {
-              console.log('WHYYY');
-              return;
-            }
-          } catch (err) {
-            next(err);
-          }
-        });
-      });
       let previous_image = await Game.findById(req.params.id);
       game = new Game({
         title: req.body.title,
