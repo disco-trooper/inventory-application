@@ -6,7 +6,7 @@
   </a>
 </p>
 
-> A simple inventory application built with Express (Node.js)
+> A simple inventory application built with Express (Node.js). Project made as a part of [The Odin Project's curriculum](https://www.theodinproject.com/courses/nodejs/lessons/inventory-application).
 
 ### ✨ [Demo](https://disco-inventory-application.herokuapp.com/)
 
